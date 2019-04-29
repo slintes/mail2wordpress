@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "categories.go",
+        "client.go",
+        "comments.go",
+        "discovery.go",
+        "list_options.go",
+        "media.go",
+        "pages.go",
+        "posts.go",
+        "posts_terms.go",
+        "revisions.go",
+        "settings.go",
+        "statuses.go",
+        "tags.go",
+        "taxonomies.go",
+        "terms.go",
+        "time.go",
+        "transports.go",
+        "types.go",
+        "users.go",
+    ],
+    importmap = "github.com/slintes/mail2wordpress/vendor/github.com/robbiet480/go-wordpress",
+    importpath = "github.com/robbiet480/go-wordpress",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/PuerkitoBio/goquery:go_default_library",
+        "//vendor/github.com/google/go-querystring/query:go_default_library",
+        "//vendor/github.com/tomnomnom/linkheader:go_default_library",
+    ],
+)

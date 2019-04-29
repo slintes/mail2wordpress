@@ -1,0 +1,31 @@
+# github.com/PuerkitoBio/goquery v1.5.0
+github.com/PuerkitoBio/goquery
+# github.com/andybalholm/cascadia v1.0.0
+github.com/andybalholm/cascadia
+# github.com/google/go-querystring v1.0.0
+github.com/google/go-querystring/query
+# github.com/inconshreveable/mousetrap v1.0.0
+github.com/inconshreveable/mousetrap
+# github.com/konsorten/go-windows-terminal-sequences v1.0.1
+github.com/konsorten/go-windows-terminal-sequences
+# github.com/robbiet480/go-wordpress v0.0.0-20180206201500-3b8369ffcef3
+github.com/robbiet480/go-wordpress
+# github.com/sirupsen/logrus v1.4.1
+github.com/sirupsen/logrus
+# github.com/spf13/cobra v0.0.3
+github.com/spf13/cobra
+# github.com/spf13/pflag v1.0.3
+github.com/spf13/pflag
+# github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80
+github.com/tomnomnom/linkheader
+# golang.org/x/net v0.0.0-20181114220301-adae6a3d119a
+golang.org/x/net/html
+golang.org/x/net/html/atom
+# golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33
+golang.org/x/sys/unix
+# golang.org/x/text v0.3.2
+golang.org/x/text/encoding/charmap
+golang.org/x/text/encoding
+golang.org/x/text/encoding/internal
+golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/transform

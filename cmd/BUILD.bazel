@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["root.go"],
+    importpath = "github.com/slintes/mail2wordpress/cmd",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/playlist:go_default_library",
+        "//pkg/server:go_default_library",
+        "//pkg/wordpress:go_default_library",
+        "//vendor/github.com/sirupsen/logrus:go_default_library",
+        "//vendor/github.com/spf13/cobra:go_default_library",
+    ],
+)

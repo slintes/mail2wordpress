@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix github.com/slintes/mail2wordpress
+gazelle(name = "gazelle")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "github.com/slintes/mail2wordpress",
+    visibility = ["//visibility:private"],
+    deps = ["//cmd:go_default_library"],
+)
+
+load("@io_bazel_rules_docker//container:image.bzl", "container_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+
+go_image(
+    name = "mail2wordpress",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+container_push(
+    name = "push_mail2wordpress",
+    image = ":mail2wordpress",
+    format = "Docker",
+    registry = "gcr.io",
+    repository = "playlist-239113/mail2wordpress",
+    tag = "latest",
+)

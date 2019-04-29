@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "converter.go",
+        "playlist.go",
+    ],
+    importpath = "github.com/slintes/mail2wordpress/pkg/playlist",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/types:go_default_library",
+        "//vendor/golang.org/x/text/encoding/charmap:go_default_library",
+    ],
+)

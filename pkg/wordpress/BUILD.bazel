@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["wordpress.go"],
+    importpath = "github.com/slintes/mail2wordpress/pkg/wordpress",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/types:go_default_library",
+        "//vendor/github.com/robbiet480/go-wordpress:go_default_library",
+        "//vendor/github.com/sirupsen/logrus:go_default_library",
+    ],
+)
