@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "go_default_library",
@@ -12,4 +12,11 @@ go_library(
         "//pkg/types:go_default_library",
         "//vendor/golang.org/x/text/encoding/charmap:go_default_library",
     ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["converter_test.go"],
+    embed = [":go_default_library"],
+    deps = ["//pkg/types:go_default_library"],
 )

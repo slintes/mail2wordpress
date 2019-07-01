@@ -83,17 +83,7 @@ func (h *Handler) parseCsv(csv string) ([]song, error) {
 			continue
 		}
 
-		// skip lines without songs
-		if strings.HasPrefix(parts[0], "Playlist") {
-			continue
-		}
-		if strings.Contains(parts[0], "Bluesstammtisch") {
-			continue
-		}
-		if strings.HasPrefix(parts[0], "Interpret") {
-			continue
-		}
-		if len(parts[0]) == 0 && len(parts[1]) == 0 && len(parts[2]) == 0 && len(parts[3]) == 0 {
+		if h.skipLine(parts) {
 			continue
 		}
 
@@ -137,11 +127,33 @@ func (h *Handler) parseCsv(csv string) ([]song, error) {
 	return songs, nil
 }
 
+func (h *Handler) skipLine(parts []string) bool {
+	// skip lines without songs
+	if strings.HasPrefix(parts[0], "Playlist") {
+		return true
+	}
+	if strings.Contains(parts[0], "Bluesstammtisch") {
+		return true
+	}
+	if strings.HasPrefix(parts[0], "Interpret") {
+		return true
+	}
+	if len(strings.TrimSpace(parts[0])) == 0 &&
+		len(strings.TrimSpace(parts[1])) == 0 &&
+		len(strings.TrimSpace(parts[2])) == 0 &&
+		len(strings.TrimSpace(parts[3])) == 0 {
+
+		return true
+
+	}
+	return false
+}
+
 func (h *Handler) isDitto(newArtist bool, oldVal template.HTML, newVal template.HTML) bool {
 	if !newArtist &&
 		(string(newVal) == string(oldVal) ||
 			strings.TrimSpace(string(newVal)) == "" ||
-			string(newVal) == "\"" ||
+			strings.TrimSpace(string(newVal)) == "\"" ||
 			strings.HasPrefix(string(newVal), "\"\"")) {
 		return true
 	}
@@ -182,10 +194,8 @@ func (h *Handler) getTemplate() string {
       <th>Label</th>
     </tr>
   </thead>
-  <tbody>
-    {{range .Songs}}
-    <tr><td>{{.Artist}}</td><td>{{.Album}}</td><td>{{.Title}}</td><td>{{.Label}}</td></tr>
-	{{end}}
+  <tbody>{{range .Songs}}
+    <tr><td>{{.Artist}}</td><td>{{.Album}}</td><td>{{.Title}}</td><td>{{.Label}}</td></tr>{{end}}
   </tbody>
 </table>
 <h2>Die nächste Sendung ist am <strong>{{.Next}}</strong>!</h2>
