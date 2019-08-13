@@ -6,7 +6,7 @@ go_library(
         "converter.go",
         "playlist.go",
     ],
-    importpath = "github.com/slintes/mail2wordpress/pkg/playlist",
+    importpath = "github.com/slintes/bluesstammtisch/pkg/playlist",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/types:go_default_library",

@@ -2,8 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/slintes/mail2wordpress/pkg/playlist"
-	"github.com/slintes/mail2wordpress/pkg/wordpress"
+	"github.com/slintes/bluesstammtisch/pkg/playlist"
+	"github.com/slintes/bluesstammtisch/pkg/wordpress"
 	"io/ioutil"
 	"net/http"
 	"os"

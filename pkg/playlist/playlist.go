@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/slintes/mail2wordpress/pkg/types"
+	"github.com/slintes/bluesstammtisch/pkg/types"
 )
 
 type Handler struct{}
@@ -18,9 +18,20 @@ func NewHandler() *Handler {
 }
 
 func (h *Handler) Process(uri string) (*types.Playlist, error) {
-	csv, err := h.download(uri)
-	if err != nil {
-		return nil, err
+
+	var csv string
+	var err error
+	if strings.HasPrefix(uri, "http") {
+		csv, err = h.download(uri)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		dat, err := ioutil.ReadFile(uri)
+		if err != nil {
+			return nil, err
+		}
+		csv = string(dat)
 	}
 	pl, err := h.convert(csv)
 	if err != nil {

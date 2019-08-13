@@ -2,6 +2,8 @@
 github.com/PuerkitoBio/goquery
 # github.com/andybalholm/cascadia v1.0.0
 github.com/andybalholm/cascadia
+# github.com/golang/protobuf v1.2.0
+github.com/golang/protobuf/proto
 # github.com/google/go-querystring v1.0.0
 github.com/google/go-querystring/query
 # github.com/inconshreveable/mousetrap v1.0.0
@@ -18,9 +20,16 @@ github.com/spf13/cobra
 github.com/spf13/pflag
 # github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80
 github.com/tomnomnom/linkheader
-# golang.org/x/net v0.0.0-20181114220301-adae6a3d119a
+# github.com/zmb3/spotify v0.0.0-20190725171427-5159bf56b13d
+github.com/zmb3/spotify
+# golang.org/x/net v0.0.0-20190108225652-1e06a53dbb7e
 golang.org/x/net/html
+golang.org/x/net/context/ctxhttp
 golang.org/x/net/html/atom
+golang.org/x/net/context
+# golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
+golang.org/x/oauth2
+golang.org/x/oauth2/internal
 # golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
@@ -29,3 +38,11 @@ golang.org/x/text/encoding
 golang.org/x/text/encoding/internal
 golang.org/x/text/encoding/internal/identifier
 golang.org/x/text/transform
+# google.golang.org/appengine v1.4.0
+google.golang.org/appengine/urlfetch
+google.golang.org/appengine/internal
+google.golang.org/appengine/internal/urlfetch
+google.golang.org/appengine/internal/base
+google.golang.org/appengine/internal/datastore
+google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/remote_api

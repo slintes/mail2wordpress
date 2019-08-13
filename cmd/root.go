@@ -1,11 +1,16 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	log "github.com/sirupsen/logrus"
-	"github.com/slintes/mail2wordpress/pkg/playlist"
-	"github.com/slintes/mail2wordpress/pkg/server"
-	"github.com/slintes/mail2wordpress/pkg/wordpress"
 	"github.com/spf13/cobra"
+
+	"github.com/slintes/bluesstammtisch/pkg/playlist"
+	"github.com/slintes/bluesstammtisch/pkg/server"
+	"github.com/slintes/bluesstammtisch/pkg/spotify"
+	"github.com/slintes/bluesstammtisch/pkg/wordpress"
 )
 
 var (
@@ -15,6 +20,9 @@ var (
 func init() {
 	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "Enable debug logging")
 
+	rootCmd.AddCommand(wordpressCmd)
+	rootCmd.AddCommand(spotifyCmd)
+
 	//log.SetFormatter(&log.JSONFormatter{})
 	if debug {
 		log.SetLevel(log.DebugLevel)
@@ -22,8 +30,17 @@ func init() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "request2wordpress",
-	Short: "request2wordpress processes HTTP request and creates a Wordpress post",
+	Use:   "bluesstammtisch",
+	Short: "bluesstammtisch creates wordpress or spotify playlists",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println("you need to add a command: wordpress or spotify")
+		return nil
+	},
+}
+
+var wordpressCmd = &cobra.Command{
+	Use:   "wordpress",
+	Short: "wordpress processes HTTP request and creates a Wordpress post",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if debug {
 			log.SetLevel(log.DebugLevel)
@@ -38,7 +55,34 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+var spotifyCmd = &cobra.Command{
+	Use:   "spotify",
+	Short: "spotify processes file and creates a Spotify playlist",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if debug {
+			log.SetLevel(log.DebugLevel)
+		}
+		plh := playlist.NewHandler()
+		pl, err := plh.Process("/home/msluiter/Downloads/Playlist.csv")
+		if err != nil {
+			return err
+		}
+		sp, err := spotify.NewSpotify()
+		if err != nil {
+			return err
+		}
+		err = sp.CreatePlaylist(pl)
+		if err != nil {
+			return err
+		}
+		return nil
+	},
+}
+
 func Execute() {
+	if len(os.Args) == 1 {
+		rootCmd.SetArgs([]string{"wordpress"})
+	}
 	if err := rootCmd.Execute(); err != nil {
 		log.Errorf("something went terrible wrong: %v", err)
 	}

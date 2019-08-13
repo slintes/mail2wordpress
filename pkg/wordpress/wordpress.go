@@ -10,7 +10,7 @@ import (
 
 	wp "github.com/robbiet480/go-wordpress"
 	log "github.com/sirupsen/logrus"
-	"github.com/slintes/mail2wordpress/pkg/types"
+	"github.com/slintes/bluesstammtisch/pkg/types"
 )
 
 var (

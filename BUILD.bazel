@@ -1,13 +1,13 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
-# gazelle:prefix github.com/slintes/mail2wordpress
+# gazelle:prefix github.com/slintes/bluesstammtisch
 gazelle(name = "gazelle")
 
 go_library(
     name = "go_default_library",
     srcs = ["main.go"],
-    importpath = "github.com/slintes/mail2wordpress",
+    importpath = "github.com/slintes/bluesstammtisch",
     visibility = ["//visibility:private"],
     deps = ["//cmd:go_default_library"],
 )
@@ -29,4 +29,10 @@ container_push(
     registry = "gcr.io",
     repository = "playlist-239113/mail2wordpress",
     tag = "latest",
+)
+
+go_binary(
+    name = "bluesstammtisch",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
 )

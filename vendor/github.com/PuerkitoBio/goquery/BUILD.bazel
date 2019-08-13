@@ -15,7 +15,7 @@ go_library(
         "type.go",
         "utilities.go",
     ],
-    importmap = "github.com/slintes/mail2wordpress/vendor/github.com/PuerkitoBio/goquery",
+    importmap = "github.com/slintes/bluesstammtisch/vendor/github.com/PuerkitoBio/goquery",
     importpath = "github.com/PuerkitoBio/goquery",
     visibility = ["//visibility:public"],
     deps = [

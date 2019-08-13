@@ -1,7 +1,7 @@
 package playlist
 
 import (
-	"github.com/slintes/mail2wordpress/pkg/types"
+	"github.com/slintes/bluesstammtisch/pkg/types"
 	"reflect"
 	"testing"
 )

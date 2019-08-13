@@ -7,23 +7,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/slintes/mail2wordpress/pkg/types"
+	"github.com/slintes/bluesstammtisch/pkg/types"
 )
 
 const (
-	ditto = template.HTML("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"")
+	Ditto = template.HTML("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"")
 )
 
 type templateData struct {
-	Songs []song
+	Songs []types.Song
 	Next  string
-}
-
-type song struct {
-	Artist template.HTML
-	Album  template.HTML
-	Title  template.HTML
-	Label  template.HTML
 }
 
 func (h *Handler) convert(csv string) (*types.Playlist, error) {
@@ -47,12 +40,13 @@ func (h *Handler) convert(csv string) (*types.Playlist, error) {
 	return &types.Playlist{
 		Title: fmt.Sprintf("Playlist %s", h.getLastDate()),
 		Body:  buf.String(),
+		Songs: songs,
 	}, nil
 }
 
-func (h *Handler) parseCsv(csv string) ([]song, error) {
+func (h *Handler) parseCsv(csv string) ([]types.Song, error) {
 
-	var songs []song
+	var songs []types.Song
 
 	lines := strings.Split(csv, "\n")
 
@@ -90,7 +84,7 @@ func (h *Handler) parseCsv(csv string) ([]song, error) {
 		newArtist := false
 		artist := template.HTML(html.EscapeString(parts[colArtist]))
 		if h.isDitto(newArtist, lastArtist, artist) {
-			artist = ditto
+			artist = Ditto
 		} else {
 			lastArtist = artist
 			newArtist = true
@@ -98,7 +92,7 @@ func (h *Handler) parseCsv(csv string) ([]song, error) {
 
 		album := template.HTML(html.EscapeString(parts[colAlbum]))
 		if h.isDitto(newArtist, lastAlbum, album) {
-			album = ditto
+			album = Ditto
 		} else {
 			lastAlbum = album
 		}
@@ -110,12 +104,12 @@ func (h *Handler) parseCsv(csv string) ([]song, error) {
 			label = template.HTML(html.EscapeString(parts[colLabel]))
 		}
 		if h.isDitto(newArtist, lastLabel, label) {
-			label = ditto
+			label = Ditto
 		} else {
 			lastLabel = label
 		}
 
-		songs = append(songs, song{
+		songs = append(songs, types.Song{
 			Artist: artist,
 			Album:  album,
 			Title:  title,

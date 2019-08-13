@@ -1,6 +1,6 @@
 package main
 
-import "github.com/slintes/mail2wordpress/cmd"
+import "github.com/slintes/bluesstammtisch/cmd"
 
 func main() {
 	cmd.Execute()

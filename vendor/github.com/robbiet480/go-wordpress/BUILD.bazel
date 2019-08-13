@@ -23,7 +23,7 @@ go_library(
         "types.go",
         "users.go",
     ],
-    importmap = "github.com/slintes/mail2wordpress/vendor/github.com/robbiet480/go-wordpress",
+    importmap = "github.com/slintes/bluesstammtisch/vendor/github.com/robbiet480/go-wordpress",
     importpath = "github.com/robbiet480/go-wordpress",
     visibility = ["//visibility:public"],
     deps = [

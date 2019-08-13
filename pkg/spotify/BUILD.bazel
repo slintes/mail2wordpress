@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "playlist.go",
+        "spotify.go",
+    ],
+    importpath = "github.com/slintes/bluesstammtisch/pkg/spotify",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/playlist:go_default_library",
+        "//pkg/types:go_default_library",
+        "//vendor/github.com/zmb3/spotify:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["spotify_test.go"],
+    embed = [":go_default_library"],
+    deps = ["//vendor/github.com/zmb3/spotify:go_default_library"],
+)

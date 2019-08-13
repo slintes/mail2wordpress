@@ -11,3 +11,11 @@ build:
 .PHONY: push
 push: build
 	bazel run :push_mail2wordpress
+
+.PHONY: wordpress
+wordpress: build
+	go run .
+
+.PHONY: spotify
+spotify: build
+	go run . spotify

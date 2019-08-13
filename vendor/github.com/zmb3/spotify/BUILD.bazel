@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "album.go",
+        "artist.go",
+        "audio_analysis.go",
+        "audio_features.go",
+        "auth.go",
+        "category.go",
+        "countries.go",
+        "cursor.go",
+        "library.go",
+        "page.go",
+        "player.go",
+        "playlist.go",
+        "recommendation.go",
+        "search.go",
+        "spotify.go",
+        "track.go",
+        "track_attributes.go",
+        "user.go",
+    ],
+    importmap = "github.com/slintes/bluesstammtisch/vendor/github.com/zmb3/spotify",
+    importpath = "github.com/zmb3/spotify",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/golang.org/x/oauth2:go_default_library"],
+)
