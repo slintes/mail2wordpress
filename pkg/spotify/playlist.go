@@ -3,6 +3,7 @@ package spotify
 import (
 	"fmt"
 	"html"
+	"strings"
 
 	"github.com/zmb3/spotify"
 
@@ -53,6 +54,16 @@ func (sp *Spotify) searchSong(song types.Song) (spotify.ID, error) {
 	} else {
 		lastArtist = artist
 	}
+
+	// remove some chars and words which might not be exactly the same on spotify
+	artist = strings.Replace(artist, "and", "", -1)
+	artist = strings.Replace(artist, "&", " ", -1)
+	artist = strings.Replace(artist, ",", " ", -1)
+	artist = strings.Replace(artist, "feat.", "", -1)
+	artist = strings.Replace(artist, "Feat.", "", -1)
+	artist = strings.Replace(artist, "featuring", "", -1)
+	artist = strings.Replace(artist, "Featuring", "", -1)
+
 	if song.Album == playlist.Ditto {
 		album = lastAlbum
 	} else {
@@ -69,15 +80,21 @@ func (sp *Spotify) searchSong(song types.Song) (spotify.ID, error) {
 	fmt.Printf("  found %v tracks\n", len(result.Tracks.Tracks))
 
 	var id spotify.ID
-	for i, track := range result.Tracks.Tracks {
+	for _, track := range result.Tracks.Tracks {
+
+		// check if we have the right track in case we found many tracks from an album with the same name
+		if strings.ToLower(track.Name[0:3]) != strings.ToLower(title[0:3]) {
+			continue
+		}
+
 		// remember 1st as best match if album not found
-		if i == 0 {
+		if id == "" {
 			id = track.ID
 		}
 
 		fmt.Printf("    album: %v\n", track.Album.Name)
 
-		if track.Album.Name == album {
+		if strings.ToLower(track.Album.Name) == strings.ToLower(album) {
 			return track.ID, nil
 		}
 	}

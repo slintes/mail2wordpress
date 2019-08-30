@@ -27,11 +27,13 @@ func (h *Handler) Process(uri string) (*types.Playlist, error) {
 			return nil, err
 		}
 	} else {
-		dat, err := ioutil.ReadFile(uri)
+		datWin, err := ioutil.ReadFile(uri)
+		dec := charmap.Windows1250.NewDecoder()
+		datUtf, err := dec.Bytes(datWin)
 		if err != nil {
 			return nil, err
 		}
-		csv = string(dat)
+		csv = string(datUtf)
 	}
 	pl, err := h.convert(csv)
 	if err != nil {

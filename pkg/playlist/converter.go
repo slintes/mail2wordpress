@@ -81,6 +81,17 @@ func (h *Handler) parseCsv(csv string) ([]types.Song, error) {
 			continue
 		}
 
+		for i, part := range parts {
+			part = strings.Replace(part, "`", "'", -1)
+			part = strings.Replace(part, "´", "'", -1)
+			part = strings.Replace(part, "‘", "'", -1)
+			part = strings.Replace(part, "’", "'", -1)
+			part = strings.Replace(part, "‛", "'", -1)
+			part = strings.Replace(part, "′", "'", -1)
+			part = strings.Replace(part, "‵", "'", -1)
+			parts[i] = part
+		}
+
 		newArtist := false
 		artist := template.HTML(html.EscapeString(parts[colArtist]))
 		if h.isDitto(newArtist, lastArtist, artist) {
