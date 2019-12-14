@@ -22,6 +22,7 @@ func init() {
 
 	rootCmd.AddCommand(wordpressCmd)
 	rootCmd.AddCommand(spotifyCmd)
+	rootCmd.AddCommand(localPlCmd)
 
 	//log.SetFormatter(&log.JSONFormatter{})
 	if debug {
@@ -51,6 +52,23 @@ var wordpressCmd = &cobra.Command{
 			return err
 		}
 		server.NewServer(plh, wp).Serve()
+		return nil
+	},
+}
+
+var localPlCmd = &cobra.Command{
+	Use:   "local-playlist",
+	Short: "local-playlist processes a local playlist file",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if debug {
+			log.SetLevel(log.DebugLevel)
+		}
+		plh := playlist.NewHandler()
+		pl, err := plh.Process("/home/msluiter/Downloads/Playlist.csv")
+		if err != nil {
+			return err
+		}
+		fmt.Print(pl.Body)
 		return nil
 	},
 }

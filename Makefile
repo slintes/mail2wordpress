@@ -19,3 +19,7 @@ wordpress: build
 .PHONY: spotify
 spotify: build
 	go run . spotify
+
+.PHONY: local
+local:
+	go run . local-playlist

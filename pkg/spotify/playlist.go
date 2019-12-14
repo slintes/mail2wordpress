@@ -56,13 +56,17 @@ func (sp *Spotify) searchSong(song types.Song) (spotify.ID, error) {
 	}
 
 	// remove some chars and words which might not be exactly the same on spotify
-	artist = strings.Replace(artist, "and", "", -1)
-	artist = strings.Replace(artist, "&", " ", -1)
-	artist = strings.Replace(artist, ",", " ", -1)
-	artist = strings.Replace(artist, "feat.", "", -1)
-	artist = strings.Replace(artist, "Feat.", "", -1)
-	artist = strings.Replace(artist, "featuring", "", -1)
-	artist = strings.Replace(artist, "Featuring", "", -1)
+	artist = strings.Replace(artist, " and ", " ", -1)
+	artist = strings.Replace(artist, "& ", " ", -1)
+	artist = strings.Replace(artist, ", ", " ", -1)
+	artist = strings.Replace(artist, " ft ", " ", -1)
+	artist = strings.Replace(artist, " feat ", " ", -1)
+	artist = strings.Replace(artist, " Feat ", " ", -1)
+	artist = strings.Replace(artist, " ft. ", " ", -1)
+	artist = strings.Replace(artist, " feat. ", " ", -1)
+	artist = strings.Replace(artist, " Feat. ", " ", -1)
+	artist = strings.Replace(artist, " featuring ", " ", -1)
+	artist = strings.Replace(artist, " Featuring ", " ", -1)
 
 	if song.Album == playlist.Ditto {
 		album = lastAlbum

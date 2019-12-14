@@ -28,6 +28,9 @@ func (h *Handler) Process(uri string) (*types.Playlist, error) {
 		}
 	} else {
 		datWin, err := ioutil.ReadFile(uri)
+		if err != nil {
+			return nil, err
+		}
 		dec := charmap.Windows1250.NewDecoder()
 		datUtf, err := dec.Bytes(datWin)
 		if err != nil {

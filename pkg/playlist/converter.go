@@ -15,20 +15,22 @@ const (
 )
 
 type templateData struct {
-	Songs []types.Song
-	Next  string
+	Songs      []types.Song
+	Next       string
+	Moderation string
 }
 
 func (h *Handler) convert(csv string) (*types.Playlist, error) {
 
-	songs, err := h.parseCsv(csv)
+	songs, moderation, next, err := h.parseCsv(csv)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse csv: %v", err)
 	}
 
 	data := &templateData{
-		Songs: songs,
-		Next:  h.getNextDate(),
+		Songs:      songs,
+		Moderation: moderation,
+		Next:       next,
 	}
 
 	t := template.Must(template.New("playlist").Parse(h.getTemplate()))
@@ -44,9 +46,7 @@ func (h *Handler) convert(csv string) (*types.Playlist, error) {
 	}, nil
 }
 
-func (h *Handler) parseCsv(csv string) ([]types.Song, error) {
-
-	var songs []types.Song
+func (h *Handler) parseCsv(csv string) (songs []types.Song, moderation string, next string, err error) {
 
 	lines := strings.Split(csv, "\n")
 
@@ -75,6 +75,14 @@ func (h *Handler) parseCsv(csv string) ([]types.Song, error) {
 		parts := strings.Split(line, ";")
 		if len(parts) < minLength {
 			continue
+		}
+
+		if found, val := h.findModeration(parts); found {
+			moderation = val
+		}
+
+		if found, val := h.findNext(parts); found {
+			next = val
 		}
 
 		if h.skipLine(parts) {
@@ -129,7 +137,21 @@ func (h *Handler) parseCsv(csv string) ([]types.Song, error) {
 
 	}
 
-	return songs, nil
+	return
+}
+
+func (h *Handler) findModeration(parts []string) (bool, string) {
+	if strings.Contains(parts[0], "Moderation") {
+		return true, parts[1]
+	}
+	return false, ""
+}
+
+func (h *Handler) findNext(parts []string) (bool, string) {
+	if strings.Contains(parts[0], "Moderation") {
+		return true, parts[3]
+	}
+	return false, ""
 }
 
 func (h *Handler) skipLine(parts []string) bool {
@@ -138,6 +160,9 @@ func (h *Handler) skipLine(parts []string) bool {
 		return true
 	}
 	if strings.Contains(parts[0], "Bluesstammtisch") {
+		return true
+	}
+	if strings.Contains(parts[0], "Moderation") {
 		return true
 	}
 	if strings.HasPrefix(parts[0], "Interpret") {
@@ -149,7 +174,6 @@ func (h *Handler) skipLine(parts []string) bool {
 		len(strings.TrimSpace(parts[3])) == 0 {
 
 		return true
-
 	}
 	return false
 }
@@ -169,12 +193,12 @@ func (h *Handler) getLastDate() string {
 	return h.getLastWednesday().Format("02.01.2006")
 }
 
-func (h *Handler) getNextDate() string {
-	// get wednesday in 2 weeks
-	lastWed := h.getLastWednesday()
-	nextWed := lastWed.AddDate(0, 0, 14)
-	return nextWed.Format("02.01.")
-}
+//func (h *Handler) getNextDate() string {
+//	// get wednesday in 2 weeks
+//	lastWed := h.getLastWednesday()
+//	nextWed := lastWed.AddDate(0, 0, 14)
+//	return nextWed.Format("02.01.")
+//}
 
 func (h *Handler) getLastWednesday() time.Time {
 	// get last wednesday (today is fine)
@@ -190,6 +214,8 @@ func (h *Handler) getLastWednesday() time.Time {
 
 func (h *Handler) getTemplate() string {
 	return `
+<h2><i>Moderation: <strong>{{.Moderation}}</strong></i></h2>
+&nbsp;<br>
 <table class="table table-responsive">
   <thead>
     <tr>
@@ -204,6 +230,6 @@ func (h *Handler) getTemplate() string {
   </tbody>
 </table>
 <h2>Die nächste Sendung ist am <strong>{{.Next}}</strong>!</h2>
-&nbsp;
+&nbsp;<br>
 `
 }
