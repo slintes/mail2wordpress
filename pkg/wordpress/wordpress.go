@@ -66,7 +66,7 @@ func (p *Poster) Post(pl *types.Playlist) error {
 		Categories: []int{wpCat},
 		Format:     wp.PostFormatStandard,
 		Type:       wp.PostTypePost,
-		Status:     wp.PostStatusDraft,
+		Status:     wp.PostStatusPublish,
 		Author:     wpAuthor,
 		Date:       wp.Time{Time: time.Now().UTC()},
 	}

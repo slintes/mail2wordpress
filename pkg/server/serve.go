@@ -50,10 +50,10 @@ func (s *Server) handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playlistUrl := string(b)
-	log.Infof("playlist url: %s", playlistUrl)
+	playlistData := string(b)
+	//log.Infof("playlist url: %s", playlistData)
 
-	pl, err := s.plh.Process(playlistUrl)
+	pl, err := s.plh.Process(playlistData)
 	if err != nil {
 		log.Errorf("could not process playlist: %v", err)
 		http.Error(w, err.Error(), 500)
