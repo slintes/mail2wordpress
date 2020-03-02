@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html"
 	"strings"
+	"time"
 
 	"github.com/zmb3/spotify"
 
@@ -23,23 +24,20 @@ func (sp *Spotify) CreatePlaylist(pl *types.Playlist) error {
 		return err
 	}
 
+	songIDs := make([]spotify.ID, 0)
 	for _, song := range pl.Songs {
-		if sp.addSong(newPl.ID, song); err != nil {
-			return err
+		if id, err := sp.searchSong(song); err == nil {
+			songIDs = append(songIDs, id)
+		} else {
+			fmt.Printf("error finding song: %v", err)
 		}
+		time.Sleep(200 * time.Millisecond)
 	}
 
-	return nil
-}
+	if _, err = sp.client.AddTracksToPlaylist(newPl.ID, songIDs...); err != nil {
+		return err
+	}
 
-func (sp *Spotify) addSong(plID spotify.ID, song types.Song) error {
-	id, err := sp.searchSong(song)
-	if err != nil {
-		return err
-	}
-	if _, err = sp.client.AddTracksToPlaylist(plID, id); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -104,7 +102,7 @@ func (sp *Spotify) searchSong(song types.Song) (spotify.ID, error) {
 	}
 
 	if string(id) == "" {
-		return "", fmt.Errorf("no song found: %+v", song)
+		return "", fmt.Errorf("song not found: %v", song.Title)
 	}
 
 	return id, nil
