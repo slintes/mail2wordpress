@@ -1,9 +1,16 @@
-.PHONY: build
-build: test
+.PHONY: generate
+generate:
 	go mod vendor && \
 	bazel run \
 		--platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 \
-		//:gazelle && \
+		//:gazelle
+
+.PHONY: test
+test: generate
+	bazel test //...
+
+.PHONY: build
+build: test
 	bazel build \
 		--platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 \
 		//...
