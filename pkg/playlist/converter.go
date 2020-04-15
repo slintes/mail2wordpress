@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html"
 	"html/template"
+	"regexp"
 	"strings"
 	"time"
 
@@ -22,7 +23,7 @@ type templateData struct {
 
 func (h *Handler) convert(csv string) (*types.Playlist, error) {
 
-	songs, moderation, next, err := h.parseCsv(csv)
+	songs, date, moderation, next, err := h.parseCsv(csv)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse csv: %v", err)
 	}
@@ -39,14 +40,17 @@ func (h *Handler) convert(csv string) (*types.Playlist, error) {
 		return nil, fmt.Errorf("error executing template: %v", err)
 	}
 
+	dateStr := date.Format("02.01.2006")
+
 	return &types.Playlist{
-		Title: fmt.Sprintf("Playlist %s", h.getLastDate()),
+		Title: fmt.Sprintf("Playlist %s", dateStr),
+		Date:  date,
 		Body:  buf.String(),
 		Songs: songs,
 	}, nil
 }
 
-func (h *Handler) parseCsv(csv string) (songs []types.Song, moderation string, next string, err error) {
+func (h *Handler) parseCsv(csv string) (songs []types.Song, date time.Time, moderation string, next string, err error) {
 
 	lines := strings.Split(csv, "\n")
 
@@ -75,6 +79,10 @@ func (h *Handler) parseCsv(csv string) (songs []types.Song, moderation string, n
 		parts := strings.Split(line, ";")
 		if len(parts) < minLength {
 			continue
+		}
+
+		if found, val := h.findDate(parts); found {
+			date = *val
 		}
 
 		if found, val := h.findModeration(parts); found {
@@ -140,15 +148,34 @@ func (h *Handler) parseCsv(csv string) (songs []types.Song, moderation string, n
 	return
 }
 
+func (h *Handler) findDate(parts []string) (bool, *time.Time) {
+	if strings.HasPrefix(parts[0], "Playlist") {
+
+		regex := regexp.MustCompile(`Playlist (.*) Bluesstammtisch.*`)
+		matches := regex.FindStringSubmatch(parts[0])
+		if len(matches) < 2 {
+			return false, nil
+		}
+
+		layout := "02.01.06"
+		date, err := time.Parse(layout, matches[1])
+		if err != nil {
+			return false, nil
+		}
+		return true, &date
+	}
+	return false, nil
+}
+
 func (h *Handler) findModeration(parts []string) (bool, string) {
-	if strings.Contains(parts[0], "Moderation") {
+	if strings.HasPrefix(parts[0], "Moderation") {
 		return true, parts[1]
 	}
 	return false, ""
 }
 
 func (h *Handler) findNext(parts []string) (bool, string) {
-	if strings.Contains(parts[0], "Moderation") {
+	if strings.HasPrefix(parts[0], "Moderation") {
 		return true, parts[3]
 	}
 	return false, ""
@@ -187,29 +214,6 @@ func (h *Handler) isDitto(newArtist bool, oldVal template.HTML, newVal template.
 		return true
 	}
 	return false
-}
-
-func (h *Handler) getLastDate() string {
-	return h.getLastWednesday().Format("02.01.2006")
-}
-
-//func (h *Handler) getNextDate() string {
-//	// get wednesday in 2 weeks
-//	lastWed := h.getLastWednesday()
-//	nextWed := lastWed.AddDate(0, 0, 14)
-//	return nextWed.Format("02.01.")
-//}
-
-func (h *Handler) getLastWednesday() time.Time {
-	// get last wednesday (today is fine)
-	now := time.Now()
-	day := int(now.Weekday())
-	// if sunday to tuesday, add a week
-	if day < 3 {
-		day += 7
-	}
-	lastWed := now.AddDate(0, 0, -(day - 3))
-	return lastWed
 }
 
 func (h *Handler) getTemplate() string {

@@ -56,6 +56,9 @@ func NewPoster() (*Poster, error) {
 }
 
 func (p *Poster) Post(pl *types.Playlist) error {
+
+	publishDate := getPublishDate(pl.Date)
+
 	post := &wp.Post{
 		Title: wp.RenderedString{
 			Raw: pl.Title,
@@ -68,7 +71,7 @@ func (p *Poster) Post(pl *types.Playlist) error {
 		Type:       wp.PostTypePost,
 		Status:     wp.PostStatusPublish,
 		Author:     wpAuthor,
-		Date:       wp.Time{Time: time.Now().UTC()},
+		Date:       wp.Time{Time: publishDate},
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
@@ -81,4 +84,20 @@ func (p *Poster) Post(pl *types.Playlist) error {
 	}
 	log.Infof("new post ID: %v", newPost.ID)
 	return nil
+}
+
+func getPublishDate(playlistDate time.Time) time.Time {
+	// calculate the publish date
+	// earliest is 22h on playlist date
+	// otherwise now
+	// in CE(S)T
+	loc, _ := time.LoadLocation("Europe/Berlin")
+	playlistDateLocal := playlistDate.In(loc)
+	hoursToAdd := 22 - playlistDateLocal.Hour() // Berlin is always later than UTC
+	playlistDateLocal = playlistDateLocal.Add(time.Duration(hoursToAdd) * time.Hour)
+	publishDate := playlistDateLocal
+	if time.Now().After(playlistDateLocal) {
+		publishDate = time.Now().In(loc)
+	}
+	return publishDate
 }

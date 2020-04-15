@@ -29,7 +29,7 @@ func (sp *Spotify) CreatePlaylist(pl *types.Playlist) error {
 		if id, err := sp.searchSong(song); err == nil {
 			songIDs = append(songIDs, id)
 		} else {
-			fmt.Printf("error finding song: %v", err)
+			fmt.Printf("error finding song: %v\n", err)
 		}
 		time.Sleep(200 * time.Millisecond)
 	}

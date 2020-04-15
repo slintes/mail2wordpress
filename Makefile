@@ -1,5 +1,5 @@
 .PHONY: build
-build:
+build: test
 	go mod vendor && \
 	bazel run \
 		--platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 \
@@ -11,6 +11,10 @@ build:
 .PHONY: push
 push: build
 	bazel run :push_mail2wordpress
+
+.PHONY: test
+test:
+	bazel test //...
 
 .PHONY: wordpress
 wordpress: build

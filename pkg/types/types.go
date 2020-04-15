@@ -1,6 +1,9 @@
 package types
 
-import "html/template"
+import (
+	"html/template"
+	"time"
+)
 
 type Song struct {
 	Artist template.HTML
@@ -11,6 +14,7 @@ type Song struct {
 
 type Playlist struct {
 	Title string
+	Date  time.Time
 	Body  string
 	Songs []Song
 }
