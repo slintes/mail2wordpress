@@ -19,10 +19,6 @@ build: test
 push: build
 	bazel run :push_mail2wordpress
 
-.PHONY: test
-test:
-	bazel test //...
-
 .PHONY: wordpress
 wordpress: build
 	go run .

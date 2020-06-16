@@ -47,6 +47,10 @@ func (sp *Spotify) searchSong(song types.Song) (spotify.ID, error) {
 	artist := html.UnescapeString(string(song.Artist))
 	album := html.UnescapeString(string(song.Album))
 
+	if len(title) == 0 || len(artist) == 0 {
+		return "", fmt.Errorf("skipping incomplete song: %+v", song)
+	}
+
 	if song.Artist == playlist.Ditto {
 		artist = lastArtist
 	} else {
@@ -85,7 +89,7 @@ func (sp *Spotify) searchSong(song types.Song) (spotify.ID, error) {
 	for _, track := range result.Tracks.Tracks {
 
 		// check if we have the right track in case we found many tracks from an album with the same name
-		if strings.ToLower(track.Name[0:3]) != strings.ToLower(title[0:3]) {
+		if len(track.Name) > 3 && len(title) > 3 && strings.ToLower(track.Name[0:3]) != strings.ToLower(title[0:3]) {
 			continue
 		}
 
